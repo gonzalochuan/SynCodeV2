@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'CustomFont';
+    src: url('/fonts/font1.otf') format('opentype'); /* Ensure the path is correct */
+    font-weight: normal;
+    font-style: normal;
+  }  
+
 @layer components {
     .tab-title {
         @apply mb-2 w-full border-b pb-2 text-start text-lg;

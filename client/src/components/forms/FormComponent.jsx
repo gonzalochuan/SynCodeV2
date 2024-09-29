@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider } from "styled-components";
 import { darkTheme } from "../../utils/Themes";
 import styled from "styled-components";
+import { auth, provider } from '../Google/firebaseConfig';
+import { signInWithPopup } from "firebase/auth";
 
 export const Button = styled.button`
     align-items: center;
@@ -88,7 +90,7 @@ const LinkButton = styled.a`
     .label {
         font-size: 12px;
         font-weight: bold;
-        color: #ff5733; /* Vibrant color for "New" label */
+        color: #17e010; /* Vibrant color for "New" label */
         margin-left: 8px;
     }
 `;
@@ -140,6 +142,24 @@ function FormComponent() {
         socket.emit(ACTIONS.JOIN_REQUEST, currentUser);
     };
 
+    const handleGoogleSignIn = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            // Set both username and googleUsername
+            setCurrentUser({ 
+                ...currentUser, 
+                username: user.displayName, 
+                googleUsername: user.displayName 
+            });
+            toast.success("Successfully signed in with Google!");
+        } catch (error) {
+            toast.error("Failed to sign in with Google. Please try again.");
+            console.error("Google Sign-In Error:", error);
+        }
+    };
+
     useEffect(() => {
         if (currentUser.roomId.length > 0) return;
         if (location.state?.roomId) {
@@ -176,9 +196,9 @@ function FormComponent() {
     return (
         <ThemeProvider theme={darkTheme}>
             <div className="flex w-full max-w-[500px] flex-col items-center justify-center gap-4 p-4 sm:w-[500px] sm:p-8">
-                <h1 className="text-4xl text-white sm:text-5xl">DrawCode</h1>
+                <h1 className="text-4xl text-white sm:text-5xl font-customFont">S y n C o d e</h1>
                 <p className="mb-4 text-center md:mb-8">
-                    {"Code, Chat, Collaborate and Illustrate synchronously"}
+                    {"Code, Chat, Collaborate and Visualize Synchronously"}
                 </p>
                 <form
                     onSubmit={joinRoom}
@@ -200,6 +220,7 @@ function FormComponent() {
                         onChange={handleInputChanges}
                         value={currentUser.username}
                         ref={usernameRef}
+                        disabled={!!currentUser.username && currentUser.username === currentUser.googleUsername}
                     />
                     <div>
                         <Button type="submit">Join Room</Button>
@@ -211,7 +232,10 @@ function FormComponent() {
                 >
                     Generate Unique Room Id
                 </button>
-                <LinkButton href="https://console-api-sig.zegocloud.com/s/uikit/F7zAJj" target="_blank" rel="noopener noreferrer">
+                <Button type="button" onClick={handleGoogleSignIn}>
+                    Sign in with Google
+                </Button>
+                <LinkButton href="https://videolink2me.com/" target="_blank" rel="noopener noreferrer">
                     Video Call
                     <span className="label">New</span>
                 </LinkButton>

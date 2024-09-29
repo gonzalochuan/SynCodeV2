@@ -12,6 +12,7 @@ export default {
             },
             fontFamily: {
                 poppins: ["Poppins", "sans-serif"],
+                customFont: ['CustomFont', 'sans-serif'],
             },
             animation: {
                 "up-down": "up-down 2s ease-in-out infinite alternate",
