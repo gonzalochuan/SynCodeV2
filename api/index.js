@@ -180,3 +180,6 @@ app.get("/", (req, res) => {
 server.listen(PORT, () => {
 	console.log(`Listening on port ${PORT}`)
 })
+
+app.use('/.client/api/index.js', router);
+module.exports.handler = serverless(app);
